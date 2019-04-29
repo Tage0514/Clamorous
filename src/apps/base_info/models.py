@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class BaseInformation(models.Model):
     stu_id = models.CharField(primary_key=True, max_length=12)
     stu_name = models.CharField(max_length=20)
@@ -20,7 +21,8 @@ class BaseInformation(models.Model):
 
     def __str__(self):
         return self.stu_name
+
     class Meta:
         managed = False
-        db_table = 'base_information'
+        db_table = 'base_information_copy'
         verbose_name_plural = '用户基础信息'

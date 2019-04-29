@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'apps.base_info',
     'apps.commu_info',
     'apps.employee',
-
+    'apps.get_activity_info',
 ]
 
 MIDDLEWARE = [
