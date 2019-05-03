@@ -9,7 +9,7 @@ class SignUpInfo(models.Model):
     stu_id = models.CharField('学号', max_length=12)
     stu_status = models.CharField('参与身份', max_length=20)
     act_name = models.CharField('活动名称', max_length=20)
-    act_score = models.IntegerField('得分', default=2)
+    act_score = models.IntegerField('活动分数', default=2)
     act_time = models.DateField('活动时间')
 
     # def __str__(self):
@@ -32,7 +32,7 @@ class ParticipationRecord(models.Model):
     stu_id = models.CharField('学号', max_length=12)
     stu_status = models.CharField('参与身份', max_length=20)
     act_name = models.CharField('活动名称', max_length=20)
-    act_score = models.IntegerField('得分', default=2)
+    act_score = models.IntegerField('活动分数', default=2)
     act_time = models.DateField('活动时间')
 
     class Meta:

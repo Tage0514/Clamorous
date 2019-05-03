@@ -12,12 +12,18 @@ class SignUpInfoAdmin(admin.ModelAdmin):
     list_display = ('stu_name', 'stu_id', 'stu_class', 'act_name',
                     'stu_status', 'act_score', 'act_time')
 
-    search_fields = ('stu_name', 'act_name','stu_id')
+    search_fields = ('stu_name', 'act_name', 'stu_id')
+    list_filter = ["act_name"]
+    date_hierarchy = 'act_time'
 
 
 class ParticipationRecordAdmin(admin.ModelAdmin):
     list_display = ('stu_name', 'stu_id', 'stu_class', 'act_name',
                     'stu_status', 'act_score', 'act_time')
+    list_editable = ["act_score"]
+    search_fields = ('stu_name', 'act_name', 'stu_id')
+    list_filter = ["act_name"]
+    date_hierarchy = 'act_time'
 
 
 admin.site.register(SignUpInfo, SignUpInfoAdmin)

@@ -10,7 +10,19 @@ class BaseInformation(models.Model):
     stu_graduation = models.IntegerField('是否今年毕业', default=0)
 
     def __unicode__(self):
-        return self.act_name
+        return self.stu_name
+
+    # def colored_name(self):
+    #     if self.stu_graduation == 1:
+    #         color_code = 'green'
+    #     else:
+    #         color_code = 'red'
+
+    #     return format_html(
+    #         '<span style="color: #{};">{}</span>',
+    #         color_code,
+    #         self.stu_graduation,
+    #     )
 
     class Meta:
         managed = False
