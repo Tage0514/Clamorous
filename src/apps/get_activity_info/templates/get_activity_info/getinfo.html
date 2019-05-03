@@ -68,8 +68,10 @@
                         onclick="get_value()">提交</a>
                 </div>
             </div>
-            <div class="page__ft">
-                <label style="color:#888;font-size: 12px">BUCT © 2019 研究生培养信息管理系统</label>
+            <div class="weui-msg__extra-area">
+                <div class="weui-footer">
+                    <p class="weui-footer__text">BUCT © 2019 研究生培养信息管理系统</p>
+                </div>
             </div>
         </div>
     </div>
@@ -98,20 +100,72 @@
                 return false;
             }
             else {
-                document.write(stu_name);
-                document.write("<br>");
-                document.write(stu_class);
-                document.write("<br>");
-                document.write(stu_id);
-                document.write("<br>");
-                document.write(activity_name);
-                document.write("<br>");
-                document.write(activity_time);
-                document.write("<br>");
-                document.write(status);
+                // document.write(stu_name);
+                // document.write("<br>");
+                // document.write(stu_class);
+                // document.write("<br>");
+                // document.write(stu_id);
+                // document.write("<br>");
+                // document.write(activity_name);
+                // document.write("<br>");
+                // document.write(activity_time);
+                // document.write("<br>");
+                // document.write(status);
 
+                var year = activity_time.substring(0, 4)
+                var month = activity_time.substring(5, 7)
+                var day = activity_time.substring(8, 10)
+                var newtiem = year + '-' + month + '-' + day
+                // document.write("<br>");
+                // document.write(year);
+                // document.write("<br>");
+                // document.write(month);
+                // document.write("<br>");
+                // document.write(day);
+                // document.write("<br>");
+                // document.write(newtiem);
+
+                // var data = {
+                //     'stu_name': stu_name,
+                //     'stu_id': stu_id,
+                //     'stu_class': stu_class,
+                //     'act_name': activity_name,
+                //     'act_time': newtiem,
+                //     'stu_status': status
+                // }
+                var parames = new Array();
+                parames.push({ name: "stu_name", value: stu_name });
+                parames.push({ name: "stu_id", value: stu_id });
+                parames.push({ name: "stu_class", value: stu_class });
+                parames.push({ name: "act_name", value: activity_name });
+                parames.push({ name: "act_time", value: newtiem });
+                parames.push({ name: "stu_status", value: status });
+
+
+                Post("http://127.0.0.1:8000/activity/success", parames);
+
+                return false;
             }
-            // document.write(activity_date);
+
+            function Post(URL, PARAMTERS) {
+                //创建form表单
+                var temp_form = document.createElement("form");
+                temp_form.action = URL;
+                //如需打开新窗口，form的target属性要设置为'_blank'
+                temp_form.target = "_self";
+                temp_form.method = "post";
+                temp_form.style.display = "none";
+                //添加参数
+                for (var item in PARAMTERS) {
+                    var opt = document.createElement("textarea");
+                    opt.name = PARAMTERS[item].name;
+                    opt.value = PARAMTERS[item].value;
+                    temp_form.appendChild(opt);
+                }
+                document.body.appendChild(temp_form);
+                //提交数据
+                temp_form.submit();
+            }
         }
     </script>
 </body>

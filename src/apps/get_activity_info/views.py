@@ -57,8 +57,21 @@ def get_activity_info(request, name, time):
 
 
 def get_activity_info_base(request):
-     return render(request, 'get_activity_info/getinfo.html')
+    return render(request, 'get_activity_info/getinfo.html')
 
 
 def activity(request):
     return render(request, 'get_activity_info/activity.html')
+
+
+def data_post(request):
+    if request.method == "POST":
+        stu_name = request.POST.get('stu_name')
+        stu_id = request.POST.get('stu_id')
+        stu_class = request.POST.get('stu_class')
+        act_name = request.POST.get('act_name')
+        act_time = request.POST.get('act_time')
+        stu_status = request.POST.get('stu_status')
+        
+        # print(a)
+        return render(request, 'get_activity_info/success.html')
