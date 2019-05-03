@@ -3,9 +3,10 @@ from django.db import models
 
 
 class SignUpInfo(models.Model):
+    id = models.AutoField(primary_key=True)
     stu_name = models.CharField('姓名', max_length=20)
     stu_class = models.CharField('班级', max_length=20)
-    stu_id = models.CharField('学号', primary_key=True, max_length=12)
+    stu_id = models.CharField('学号', max_length=12)
     stu_status = models.CharField('参与身份', max_length=20)
     act_name = models.CharField('活动名称', max_length=20)
     act_score = models.IntegerField('得分', default=2)
@@ -20,14 +21,15 @@ class SignUpInfo(models.Model):
     class Meta:
         managed = False
         db_table = 'activity_registration'
-        verbose_name_plural = "活动报名信息"
+        verbose_name_plural = "报名信息"
         verbose_name = "报名记录"
 
 
 class ParticipationRecord(models.Model):
+    id = models.AutoField(primary_key=True)
     stu_name = models.CharField('姓名', max_length=20)
     stu_class = models.CharField('班级', max_length=20)
-    stu_id = models.CharField('学号', primary_key=True, max_length=12)
+    stu_id = models.CharField('学号', max_length=12)
     stu_status = models.CharField('参与身份', max_length=20)
     act_name = models.CharField('活动名称', max_length=20)
     act_score = models.IntegerField('得分', default=2)
@@ -36,7 +38,7 @@ class ParticipationRecord(models.Model):
     class Meta:
         managed = False
         db_table = 'participationr_record'
-        verbose_name_plural = "活动参与信息"
+        verbose_name_plural = "参与信息"
         verbose_name = "参与记录"
 
 

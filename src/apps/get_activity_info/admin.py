@@ -12,6 +12,8 @@ class SignUpInfoAdmin(admin.ModelAdmin):
     list_display = ('stu_name', 'stu_id', 'stu_class', 'act_name',
                     'stu_status', 'act_score', 'act_time')
 
+    search_fields = ('stu_name', 'act_name','stu_id')
+
 
 class ParticipationRecordAdmin(admin.ModelAdmin):
     list_display = ('stu_name', 'stu_id', 'stu_class', 'act_name',
