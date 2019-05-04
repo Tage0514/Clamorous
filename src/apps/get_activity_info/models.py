@@ -15,8 +15,8 @@ class SignUpInfo(models.Model):
     # def __str__(self):
     #     return self.act_name
 
-    def __unicode__(self):
-        return self.act_name
+    def __str__(self):
+        return self.stu_name
 
     class Meta:
         managed = False
@@ -34,6 +34,10 @@ class ParticipationRecord(models.Model):
     act_name = models.CharField('活动名称', max_length=20)
     act_score = models.IntegerField('活动分数', default=2)
     act_time = models.DateField('活动时间')
+    stu_rank = models.CharField('名次', max_length=20, blank=True, null=True)
+
+    def __str__(self):
+        return self.stu_name
 
     class Meta:
         managed = False

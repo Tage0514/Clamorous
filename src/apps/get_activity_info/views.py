@@ -1,10 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from apps.get_activity_info.models import SignUpInfo, ParticipationRecord
+from apps.base_info.models import BaseInformation, BindWechat
 
 
 def pose_activity_info(request):
-
-    context = {"a": "nn", "b": "2", "c": "3"}
     av_catalog = {
         'list1': [{
             'act_name': '新生教育',
@@ -45,8 +45,11 @@ def pose_activity_info(request):
             'act_time': '2019-03'
         }]
     }
-
-    return render(request, 'get_activity_info/showinfo.html', av_catalog)
+    list1 = ParticipationRecord.objects.filter(stu_id=2015014317).values()
+    list2 = ParticipationRecord.objects.filter(stu_id=2015014328).values()
+    context = {"list1": list1, "list2": list2}
+    # return HttpResponse(list1)
+    return render(request, 'get_activity_info/showinfo.html', context)
 
 
 def get_activity_info(request, name, time):
@@ -72,6 +75,30 @@ def data_post(request):
         act_name = request.POST.get('act_name')
         act_time = request.POST.get('act_time')
         stu_status = request.POST.get('stu_status')
-        
-        # print(a)
-        return render(request, 'get_activity_info/success.html')
+
+        base_info_stu_id = BaseInformation.objects.values_list(
+            'stu_id', flat=True)
+        base_info_stu_name = BaseInformation.objects.values_list(
+            'stu_name', flat=True)
+        base_info_stu_class = BaseInformation.objects.values_list(
+            'stu_class', flat=True)
+        # for baseinfoid in base_info_stu_id:
+
+        if stu_id in base_info_stu_id and stu_name in base_info_stu_name and stu_class in base_info_stu_class:
+            signup = SignUpInfo()
+            signup.stu_name = stu_name
+            signup.stu_id = stu_id
+            signup.stu_class = stu_class
+            signup.act_name = act_name
+            signup.act_time = act_time
+            signup.stu_status = stu_status
+            signup.save()
+            return render(request, 'get_activity_info/success.html')
+
+        else:
+            return render(request, 'get_activity_info/warn.html')
+
+        # print(type(base_info_stu_id))
+        # print(base_info_stu_id)
+        # return render(request, 'get_activity_info/success.html')
+        # return render(request, 'get_activity_info/warn.html')
