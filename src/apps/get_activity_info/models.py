@@ -12,13 +12,11 @@ class SignUpInfo(models.Model):
     act_score = models.IntegerField('活动分数', default=2)
     act_time = models.DateField('活动时间')
 
-    # def __str__(self):
-    #     return self.act_name
-
     def __str__(self):
         return self.stu_name
 
     class Meta:
+        unique_together = (("stu_id", "act_name", "stu_status"), )
         managed = False
         db_table = 'activity_registration'
         verbose_name_plural = "报名信息"
@@ -45,18 +43,3 @@ class ParticipationRecord(models.Model):
         verbose_name_plural = "参与信息"
         verbose_name = "参与记录"
 
-
-# class Contact(models.Model):
-#     name = models.CharField(max_length=200)
-#     age = models.IntegerField(default=0)
-#     email = models.EmailField()
-
-#     def __unicode__(self):
-#         return self.name
-
-# class Tag(models.Model):
-#     contact = models.ForeignKey(Contact)
-#     name = models.CharField(max_length=50)
-
-#     def __unicode__(self):
-#         return self.name

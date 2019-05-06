@@ -1,9 +1,19 @@
 from django.contrib import admin
-from apps.base_info.models import BaseInformation, BindWechat
+
+# Register your models here.
+
+from apps.wechat.models import BindWechat
 
 
 class ReadOnlyModelAdmin(admin.ModelAdmin):
+    """ModelAdmin class that prevents modifications through the admin.
+ 
+    The changelist and the detail view work, but a 403 is returned
+    if one actually tries to edit an object.
+    """
+
     # actions = None
+
     def get_readonly_fields(self, request, obj=None):
         return self.fields or [f.name for f in self.model._meta.fields]
 
@@ -21,19 +31,10 @@ class ReadOnlyModelAdmin(admin.ModelAdmin):
         return True
 
 
-class BaseInforAdmin(admin.ModelAdmin):
-    list_display = ('stu_name', 'stu_id', 'stu_gender', 'stu_class',
-                    'stu_college', 'stu_graduation')
-    search_fields = ('stu_name', 'stu_college', 'stu_id', 'stu_class')
-    list_filter = ["stu_college", "stu_graduation"]
-    list_per_page = 50
-    list_max_show_all = 50
-
-
 class BindWechatAdmin(ReadOnlyModelAdmin):
     list_display = ('stu_name', 'stu_id', 'stu_class', 'stu_openid')
+    search_fields = ('stu_name', 'stu_id')
     # actions = None
 
 
-# admin.site.register(BindWechat, BindWechatAdmin)
-admin.site.register(BaseInformation, BaseInforAdmin)
+admin.site.register(BindWechat, BindWechatAdmin)

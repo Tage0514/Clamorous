@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'commu_info/', include('apps.commu_info.urls')),
     url(r'employee/', include('apps.employee.urls')),
     url(r'activity/', include('apps.get_activity_info.urls')),
+    url(r'^wx', include('apps.wechat.urls')),
 ]
