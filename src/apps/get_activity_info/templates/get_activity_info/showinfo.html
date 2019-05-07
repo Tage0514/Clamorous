@@ -27,7 +27,7 @@
                     <div class="weui-panel__bd">
                         <div class="weui-cell">
                             <div class="weui-cell__bd">
-                                <p style="font-size: 20px;color: #3cc51f;">德育活动</p>
+                                <p style="font-size: 20px;color: #3cc51f;">项目化加分活动</p>
                             </div>
                             <div class="weui-cell__ft" style="font-size: 20px;">参加个数：{{list1|length}}</div>
                         </div>
@@ -52,7 +52,7 @@
                     <div class="weui-panel__bd">
                         <div class="weui-cell">
                             <div class="weui-cell__bd">
-                                <p style="font-size: 20px;color: #3cc51f;">学术活动</p>
+                                <p style="font-size: 20px;color: #3cc51f;">德育活动</p>
                             </div>
                             <div class="weui-cell__ft" style="font-size: 20px;">参加个数：{{list2|length}}</div>
                         </div>
@@ -61,10 +61,8 @@
                             <h4 class="weui-media-box__title" style="font-size: 17px;">{{items.act_name}}</h4>
                             <p class="weui-media-box__desc">姓名：{{items.stu_name}}</p>
                             <p class="weui-media-box__desc">学号：{{items.stu_id}}</p>
-                            <p class="weui-media-box__desc">参与身份：{{items.stu_status}}</p>
                             <p class="weui-media-box__desc">活动分数：{{items.act_score}}</p>
                             <p class="weui-media-box__desc">活动时间：{{items.act_time}}</p>
-                            <p class="weui-media-box__desc">名次：{{items.stu_rank}}</p>
                         </div>
                         {% endfor %}
                         <!-- <div class="weui-media-box weui-media-box_text">

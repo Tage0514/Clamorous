@@ -2,6 +2,11 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from apps.get_activity_info.models import SignUpInfo, ParticipationRecord
 from apps.base_info.models import BaseInformation, BindWechat
+import hashlib
+import time
+from apps.wechat.receive import parse_xml
+from apps.wechat import receive, reply
+from apps.get_activity_info.getopenid import get_session_key, get_code
 
 
 def pose_activity_info(request):
@@ -45,11 +50,32 @@ def pose_activity_info(request):
             'act_time': '2019-03'
         }]
     }
-    list1 = ParticipationRecord.objects.filter(stu_id=2015014317).values()
-    list2 = ParticipationRecord.objects.filter(stu_id=2015014328).values()
-    context = {"list1": list1, "list2": list2}
-    # return HttpResponse(list1)
-    return render(request, 'get_activity_info/showinfo.html', context)
+    if request.method == 'GET':
+        # print(1)
+        code = request.GET.get('code')
+        # print(code)
+        # if code is None:
+        #     print(2)
+        #     code = get_code()
+        #     print(code)
+        flag, openid = get_session_key(code)
+        # print(openid)
+        if flag:
+            bindwechardata = BindWechat.objects.filter(
+                stu_openid=openid).values()
+            stuid = bindwechardata[0]['stu_id']
+            list1 = ParticipationRecord.objects.filter(stu_id=stuid).values()
+            list2 = MoralActivity.objects.filter(stu_id=stuid).values()
+            context = {"list1": list1, "list2": list2}
+            # return HttpResponse(list1)
+            # return HttpResponse(webData)
+            return render(request, 'get_activity_info/showinfo.html', context)
+            # return render(request, 'get_activity_info/warm_showinfo.html')
+            # print(stuid)
+        else:
+            return render(request, 'get_activity_info/warm_showinfo.html')
+
+    return render(request, 'get_activity_info/showinfo.html')
 
 
 def get_activity_info(request, name, time):

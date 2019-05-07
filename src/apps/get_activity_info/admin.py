@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.get_activity_info.models import SignUpInfo, ParticipationRecord
+from apps.get_activity_info.models import SignUpInfo, ParticipationRecord, MoralActivity
 from django.contrib.auth.models import Group, User
 from apps.get_activity_info.commen import export_as_csv_action
 from import_export import resources
@@ -36,7 +36,7 @@ class SignUpInfoResource(resources.ModelResource):
         for row in dataset.dict:
             tmp = row
             tmp['id'] = id
-            ##################################################################
+
             data = SignUpInfo.objects.filter(stu_id=tmp['学号']).values_list(
                 'stu_id', 'act_name', 'stu_status', 'id')
             # print(data)
@@ -45,9 +45,9 @@ class SignUpInfoResource(resources.ModelResource):
                 d_dict[i[:3]] = i[-1]
 
             if (tmp['学号'], tmp['活动名称'], tmp['参与身份']) in d_dict.keys():
-                print("ok")
+                # print("ok")
                 tmp['id'] = d_dict[(tmp['学号'], tmp['活动名称'], tmp['参与身份'])]
-                print(tmp['id'])
+                # print(tmp['id'])
 
             else:
                 id = id + 1
@@ -67,7 +67,7 @@ class SignUpInfoResource(resources.ModelResource):
 class SignUpInfoAdmin(ImportExportModelAdmin):
     list_display = ('stu_name', 'stu_id', 'stu_class', 'act_name',
                     'stu_status', 'act_score', 'act_time')
-    search_fields = ('stu_name', 'act_name', 'stu_id')
+    search_fields = ('stu_name', 'act_name', 'stu_id', 'act_time')
     list_filter = ["act_name"]
     date_hierarchy = 'act_time'
     actions = [
@@ -114,7 +114,7 @@ class ParticipationRecordResource(resources.ModelResource):
                 d_dict[i[:3]] = i[-1]
 
             if (tmp['学号'], tmp['活动名称'], tmp['参与身份']) in d_dict.keys():
-                print("ok")
+                # print("ok")
                 tmp['id'] = d_dict[(tmp['学号'], tmp['活动名称'], tmp['参与身份'])]
 
             else:
@@ -136,7 +136,7 @@ class ParticipationRecordAdmin(ImportExportModelAdmin):
     list_display = ('stu_name', 'stu_id', 'stu_class', 'act_name',
                     'stu_status', 'act_score', 'act_time', 'stu_rank')
     list_editable = ["act_score"]
-    search_fields = ('stu_name', 'act_name', 'stu_id')
+    search_fields = ('stu_name', 'act_name', 'stu_id', 'act_time')
     list_filter = ["act_name"]
     date_hierarchy = 'act_time'
     ordering = ('-act_time', )
@@ -151,8 +151,78 @@ class ParticipationRecordAdmin(ImportExportModelAdmin):
     resource_class = ParticipationRecordResource
 
 
+class MoralActivityResource(resources.ModelResource):
+    def __init__(self):
+        super(MoralActivityResource, self).__init__()
+        field_list = apps.get_model('get_activity_info',
+                                    'MoralActivity')._meta.fields
+        self.vname_dict = {}
+        for i in field_list:
+            self.vname_dict[i.name] = i.verbose_name
+
+    def get_export_fields(self):
+        fields = self.get_fields()
+        for field in fields:
+            field_name = self.get_field_name(field)
+            # 如果我们设置过verbose_name，则将column_name替换为verbose_name。否则维持原有的字段名
+            if field_name in self.vname_dict.keys():
+                field.column_name = self.vname_dict[field_name]
+        return fields
+
+    def before_import(self, dataset, using_transactions, dry_run, **kwargs):
+        dict = []
+        id = MoralActivity.objects.latest('id').id + 1
+        for row in dataset.dict:
+            tmp = row
+            tmp['id'] = id
+            data = MoralActivity.objects.filter(stu_id=tmp['学号']).values_list(
+                'stu_id', 'act_name', 'id')
+            # print(data)
+            d_dict = {}
+            for i in data:
+                d_dict[i[:2]] = i[-1]
+
+            if (tmp['学号'], tmp['活动名称']) in d_dict.keys():
+                # print("ok")
+                tmp['id'] = d_dict[(tmp['学号'], tmp['活动名称'])]
+
+            else:
+                id = id + 1
+            dict.append(tmp)
+        dataset.dict = dict
+
+    class Meta:
+        model = MoralActivity
+        skip_unchanged = True
+        report_skipped = True
+        fields = ('stu_name', 'stu_id', 'stu_class', 'act_name', 'act_score',
+                  'act_time', 'id')
+        export_order = ('stu_name', 'stu_id', 'stu_class', 'act_name',
+                        'act_time', 'act_score')
+
+
+class MoralActivityAdmin(ImportExportModelAdmin):
+    list_display = ('stu_name', 'stu_id', 'stu_class', 'act_name', 'act_score',
+                    'act_time')
+    list_editable = ["act_score"]
+    search_fields = ('stu_name', 'act_name', 'stu_id', 'act_time')
+    list_filter = ["act_name"]
+    date_hierarchy = 'act_time'
+    ordering = ('-act_time', )
+    actions = [
+        export_as_csv_action(
+            "导出Execl",
+            fields=[
+                'stu_name', 'stu_id', 'stu_class', 'act_name', 'act_score',
+                'act_time'
+            ])
+    ]
+    resource_class = MoralActivityResource
+
+
 admin.site.register(SignUpInfo, SignUpInfoAdmin)
 admin.site.register(ParticipationRecord, ParticipationRecordAdmin)
+admin.site.register(MoralActivity, MoralActivityAdmin)
 
 admin.site.unregister(Group)
 admin.site.unregister(User)

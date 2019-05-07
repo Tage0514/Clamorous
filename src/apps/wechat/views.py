@@ -45,7 +45,7 @@ def autoreply(request):
             fromUser = recMsg.ToUserName
             if recMsg.MsgType == 'text':
                 if recMsg.Content == '绑定':
-                    content = '请输入绑定+学号，例如：绑定+2019000111'
+                    content = '请输入：“绑定+学号”，例如：绑定+2019000111'
                 elif recMsg.Content[0:3] == '绑定+':
 
                     temp = recMsg.Content[3:]
@@ -58,7 +58,7 @@ def autoreply(request):
                         if bdata.exists():
                             content = "当前微信号或学号已被绑定，请联系管理员！"
                         else:
-                            print(data[0]['stu_id'])
+                            # print(data[0]['stu_id'])
                             binddata = BindWechat()
                             binddata.stu_id = data[0]['stu_id']
                             binddata.stu_name = data[0]['stu_name']
@@ -78,12 +78,71 @@ def autoreply(request):
                 replyMsg = reply.ImageMsg(toUser, fromUser, mediaId)
                 return replyMsg.send()
         if isinstance(recMsg, receive.EventMsg):
+            toUser = recMsg.FromUserName
+            fromUser = recMsg.ToUserName
+            if recMsg.Event == 'subscribe':
+                content = "感谢您关注【研究生培养信息系统】\n回复:“绑定”查看绑定详情！\n更多内容，敬请期待..."
+                replyMsg = reply.TextMsg(toUser, fromUser, content)
+                return replyMsg.send()
+            if recMsg.Event == 'VIEW':
+                content = "点击VIEW"
+                # print(toUser)
+                # print(fromUser)
+                print(content)
+                replyMsg = reply.TextMsg(toUser, fromUser, content)
+                return replyMsg.send()
             if recMsg.Event == 'CLICK':
                 if recMsg.Eventkey == 'mpGuide':
-                    content = u"编写中，尚未完成".encode('utf-8')
-                    replyMsg = TextMsg(toUser, fromUser, content)
+                    content = "编写中，尚未完成"
+                    replyMsg = reply.TextMsg(toUser, fromUser, content)
                     return replyMsg.send()
-        print("这里是1")
+        print("暂且不处理")
         return Msg().send()
     except (Exception) as Argment:
         return Argment
+
+
+# from django.views.generic import View
+# from django.http import HttpResponseRedirect
+# from django.http import HttpResponse, HttpResponseServerError
+# from django.shortcuts import render, redirect
+# from apps.wechat.WechatAPI import WechatLogin
+
+# class WechatViewSet(View):
+#     wechat_api = WechatLogin()
+
+# class AuthView(WechatViewSet):
+#     def get(self, request):
+#         url = self.wechat_api.get_code_url()
+#         return redirect(url)
+
+# class GetInfoView(WechatViewSet):
+#     def get(self, request):
+#         if 'code' in request.GET:
+#             code = request.GET['code']
+#             token, openid = self.wechat_api.get_access_token(code)
+#             if token is None or openid is None:
+#                 return HttpResponseServerError('get code error')
+#             user_info, error = self.wechat_api.get_user_info(token, openid)
+#             if error:
+#                 return HttpResponseServerError('get access_token error')
+#             user_data = {
+#                 'nickname': user_info['nickname'],
+#                 'sex': user_info['sex'],
+#                 'province': user_info['province'].encode('iso8859-1').decode('utf-8'),
+#                 'city': user_info['city'].encode('iso8859-1').decode('utf-8'),
+#                 'country': user_info['country'].encode('iso8859-1').decode('utf-8'),
+#                 'avatar': user_info['headimgurl'],
+#                 'openid': user_info['openid']
+#             }
+#             user = BeautyUsers.objects.filter(is_effective=True).filter(wechat=user_data['openid'])
+#             if user.count() == 0:
+#                 user = BeautyUsers.objects.create(username=user_data['nickname'],
+#                                                   wechat_avatar=user_data['avatar'],
+#                                                   wechat=user_data['openid'],
+#                                                   password='')
+#                 login(request, user)
+#             else:
+#                 login(request, user.first())
+#             # 授权登录成功，进入主页
+#             return home(request)
