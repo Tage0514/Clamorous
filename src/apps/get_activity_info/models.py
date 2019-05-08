@@ -61,3 +61,21 @@ class MoralActivity(models.Model):
         db_table = 'moral_activity'
         verbose_name_plural = "德育活动"
         verbose_name = "德育活动记录"
+
+
+class AcademicReport(models.Model):
+    id = models.AutoField(primary_key=True)
+    stu_name = models.CharField('姓名', max_length=20)
+    stu_class = models.CharField('班级', max_length=20)
+    stu_id = models.CharField('学号', max_length=12)
+    act_name = models.CharField('报告名称', max_length=20)
+    act_time = models.DateField('活动时间')
+
+    def __str__(self):
+        return self.stu_name
+
+    class Meta:
+        managed = False
+        db_table = 'academic_report'
+        verbose_name_plural = "学术报告"
+        verbose_name = "学术报告记录"

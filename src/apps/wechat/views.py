@@ -88,14 +88,14 @@ def autoreply(request):
                 content = "点击VIEW"
                 # print(toUser)
                 # print(fromUser)
-                print(content)
+                # print(content)
                 replyMsg = reply.TextMsg(toUser, fromUser, content)
                 return replyMsg.send()
             if recMsg.Event == 'CLICK':
-                if recMsg.Eventkey == 'mpGuide':
-                    content = "编写中，尚未完成"
-                    replyMsg = reply.TextMsg(toUser, fromUser, content)
-                    return replyMsg.send()
+                # if recMsg.Eventkey == 'Help':
+                content = "编写中，尚未完成"
+                replyMsg = reply.TextMsg(toUser, fromUser, content)
+                return replyMsg.send()
         print("暂且不处理")
         return Msg().send()
     except (Exception) as Argment:
